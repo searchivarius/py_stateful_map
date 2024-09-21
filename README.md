@@ -1,3 +1,5 @@
+[![PyPI version](https://img.shields.io/pypi/v/py_stateful_map.svg)](https://pypi.python.org/pypi/py_stateful_map/)
+
 # Overview
 
 This is a missing piece of the Python multitask (both threads and processes) API, which:
