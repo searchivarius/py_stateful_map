@@ -11,7 +11,7 @@ with open(path.join(curr_dir, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='py_stateful_map',
-    version='0.1.0',
+    version=__version__,
     description='A an extension of the multiproc/thread map that supports stateful workers & size-aware iterators.',
     author="Leonid Boytsov",
     author_email="leo@boytsov.info",

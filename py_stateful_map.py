@@ -4,6 +4,8 @@ import inspect
 from typing import Dict, List, Type, NamedTuple
 from copy import copy
 
+from version import __version__
+
 
 class ArgumentPassing(NamedTuple):
     """
