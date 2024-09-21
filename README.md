@@ -1,33 +1,38 @@
 # Overview
 
-This is a missing piece of the Python multitask (both threads and processes) API, which permits enjoyable 
-parallelization of iteration through both unsizeable and sizeable collections with a possibility to display
-a progress bar of your choice (i.e., not necessarily ``tqdm```), which also supports stateful worker pools,
-which can be initialized directly in a worker process/thread. This package is **dependency-free** and
-supports both threads and processes. Due to GIL-limitations threads provide only limited parallelization as of
-now, but this will change in the near future. Also note that the use of this package
-(and multiprocessing map in general) in a Jupyter notebook may require changing
+This is a missing piece of the Python multitask (both threads and processes) API, which:
+* Permits enjoyable parallelization of iteration through both unsizeable and sizeable collections with a possibility to display
+a progress bar of your choice (i.e., not necessarily ``tqdm``)
+* It also supports stateful worker pools, which can be initialized directly in a worker process/thread. 
+
+This package is **dependency-free** and supports both threads and processes. 
+Due to GIL-limitations threads provide only limited parallelization as of
+now, but this [will change in the foreseeable  future](https://www.reddit.com/r/Python/comments/1bcggx9/disabling_the_gil_option_has_been_merged_into/). 
+
+PS: Note that the use of this package (and multiprocessing map in general) in a Jupyter notebook may require changing
 the process starting behavior (see [this sample notebook](examples/py_stateful_map_ex1.ipynb))
 
 # Summary of advantages
 
 A standard worker pools together with map-style distribution of tasks is a convenient abstraction,
 but it lacks support for initialization of stateful workers (inside each process
-without copying them from the main process, e.g., you cannot load the model to a specific GPU only once) and treats 
-both sizeable and unsizeable iterators equally. Because standard map functions
-do not implement the ``__len__`` function so you cannot easily display a nice progress bar.
-A nice [pqdm package]() solves this problem, but it does not support lazy (memory-efficient)
-iteration and has to load all inputs into the memory. ``py_stateful_map`` fixes all these issues
+without copying them from the main process) and treats  both sizeable and unsizeable iterators equally. 
+As one core task for deep learners, you can load an embedding-generation model to a specific GPU only once.
+
+Because standard map functions do not use the ``__len__`` function even if it is provided by the input iterable, 
+one cannot easily display a nice progress bar (going from 0% to 100%).
+A nice [pqdm package]() does solve this problem, but it does not support lazy (memory-efficient)
+iteration and it has to load all inputs into the memory. ``py_stateful_map`` fixes all these issues
 without directly incorporating tqdm.
 
 To summarize ``py_stateful_map`` overcomes the followings shortcomings of the standard API and/or ``pqdm``
  without requiring any additional dependencies:
 
-1. Pain-free support for stateful workers, which are initialized separate in each process using a worker-specific set of arguments (stateless workers are supported as well).
+1. Pain-free support for stateful workers, which are initialized separately in each process using a worker-specific set of arguments (stateless workers are supported as well).
 2. Support for lazy, memory-efficient, iterators (unlike ``pqdm`).
-3. The package simulates an iterator that has the ``__len__`` function (unlike standard Python map functions) if an input operator is sizealbe.
-4. Supports pain free handling of exceptions. Exceptions can be just stored in the return object, immediately fired, or fired after all concurrent tasks are finished.
-5. Supports both ordered and **un**ordered return of results (unlike ``pqdm``). Unordered return of results is sometimes more efficient.
+3. The package simulates an iterator that has the ``__len__`` function (unlike standard Python map functions) if an input iterable is **sizealbe**.
+4. Support for pain free handling of exceptions. Exceptions can be just stored in the return object, immediately fired, or fired after all concurrent tasks are finished.
+5. Support for both ordered and **un**ordered return of results (unlike ``pqdm``). Unordered return of results is sometimes more efficient.
 
 # Install & Use
 
@@ -87,18 +92,18 @@ if __name__ == '__main__':
     print('Total:', tot_res)
 ```
 
-A wrapper example file that can be used to play with all possible input options
+A wrapper example file that can be used to play with all possible options
 can [be found here](examples/py_stateful_map_demo.py).
 
 # Usage in details
 
 ## Passing arguments
 
-Python function supports two types of arguments: positional, and kwargs (as a key-value dictionary).
+Python function support two types of arguments: positional and kwargs (as a key-value dictionary).
 The function ``StateFullWorkerPool.map`` reads element from an input iterable object and converts them
 into arguments for a worker, accordingly. This is done in three ways (similar to ``pqdm```):
 
-1. A single positional argument. This is a default behavior that can be enabled explicitly by specifying the argument passing type as `ArgumentPassing.AS_SINGLE_ARG`. In this case, each input element is directly passage to the worker function (as the only argument).
+1. A single positional argument. This is a default behavior that can be enabled explicitly by specifying the argument passing type as `ArgumentPassing.AS_SINGLE_ARG`. In this case, each input element is directly passage to the worker function (as **the only argument**).
 2. Multiple positional arguments. In this case, we assume that the input iterable contains lists or tuples of equal lengths. These tuples/arrays are interprted as positional arguments.
 3. Named arguments (KWARGS). In this case, the input iterable should provide dictioinaries where keys correspond to the worker function names.
 
