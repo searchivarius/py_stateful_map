@@ -37,7 +37,7 @@ To summarize ``py_stateful_map`` overcomes the followings shortcomings of the st
 1. Pain-free support for stateful workers, which are initialized separately in each process using a worker-specific set of arguments (stateless workers are supported as well).
 2. Support for lazy, memory-efficient, iterators (unlike ``pqdm``).
 3. The package simulates an iterator that has the ``__len__`` function (unlike standard Python map functions) if an input iterable is **sizeable**.
-4. Support for pain free handling of exceptions. Exceptions can be just stored in the return object, immediately fired, or fired after all concurrent tasks are finished.
+4. Support for pain free handling of exceptions. Exceptions can be just stored in the return object, immediately fired, or fired after all concurrent tasks are finished. In contrast, my experience with PQDM is that even "immediate" exception processing does not lead to immediate firing of the exceptions.
 5. Support for both ordered and **un**ordered return of results (unlike ``pqdm``). Unordered return of results is sometimes more efficient.
 
 # Install & Use
