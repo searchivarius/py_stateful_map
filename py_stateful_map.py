@@ -1,8 +1,20 @@
 import multiprocessing as mp
 import inspect
+import logging
 
 from typing import Dict, List, Type, NamedTuple
 from copy import copy
+
+deprecation_warning_issued = False
+
+def issue_warning():
+    global deprecation_warning_issued
+    if not deprecation_warning_issued:
+        logging.warning("This package is deprecated: please, update your code to use https://github.com/searchivarius/py_mtasklite instead.")
+        _warning_issued = True
+
+# Place this at the top of your package's __init__.py file
+issue_warning()
 
 class ArgumentPassing(NamedTuple):
     """
