@@ -2,7 +2,7 @@
 
 # Important note
 
-This package is deprecated: please, update your code to use [mtasklite](https://github.com/searchivarius/py_mtasklite instead).
+This package is deprecated: please, update your code to use [mtasklite](https://github.com/searchivarius/py_mtasklite) instead.
 
 # Overview
 
